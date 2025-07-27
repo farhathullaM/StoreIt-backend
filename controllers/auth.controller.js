@@ -65,12 +65,13 @@ export const login = async (req, res) => {
 };
 
 export const refreshToken = (req, res) => {
-  const { token } = req.body;
-  if (!token) return res.status(401).json({ message: "Token required" });
-  if (!refreshTokens.includes(token))
+  const { refreshToken } = req.body;
+  console.log(refreshToken, "refreshToken");
+  if (!refreshToken) return res.status(401).json({ message: "Token required" });
+  if (!refreshTokens.includes(refreshToken))
     return res.status(403).json({ message: "Invalid token" });
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+  jwt.verify(refreshToken, process.env.JWT_SECRET, (err, user) => {
     if (err) return res.status(403).json({ message: "Invalid token" });
 
     const newAccessToken = generateAccessToken({
@@ -83,7 +84,8 @@ export const refreshToken = (req, res) => {
 };
 
 export const logout = (req, res) => {
-  const { token } = req.body;
-  refreshTokens = refreshTokens.filter((t) => t !== token);
+  const { refreshToken } = req.body;
+  console.log(refreshToken, "refreshToken");
+  refreshTokens = refreshTokens.filter((t) => t !== refreshToken);
   res.sendStatus(204);
 };
